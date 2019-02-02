@@ -7,8 +7,8 @@ import styled from 'styled-components';
 const Container = styled.div`
   background: rgb(15,21,183);
   background: linear-gradient(0deg, rgba(15,21,183,1) 11%, rgba(119,157,223,1) 100%);
-  height: 100%;
-  padding: 150px;
+  height: 100vh;
+  padding: 100px 15px;
 `
 
 class App extends Component {
@@ -77,7 +77,6 @@ class App extends Component {
           hi={this.state.currentWeather.hi} 
           low={this.state.currentWeather.low}
           isLoading={this.state.isLoading} />
-        <CardContainer />
       </Container>
     );
   }
