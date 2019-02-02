@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import TodayCard from './components/TodayCard';
-import CardContainer from './components/CardContainer';
+import Toggle from './components/Toggle';
 import Search from './components/Search';
+import CardContainer from './components/CardContainer';
 import styled from 'styled-components';
 
 const Container = styled.div`
@@ -9,19 +10,23 @@ const Container = styled.div`
   background: linear-gradient(0deg, rgba(15,21,183,1) 11%, rgba(119,157,223,1) 100%);
   height: 100vh;
   padding: 100px 15px;
+  box-sizing: border-box;
 `
 
 class App extends Component {
   constructor() {
     super();
     this.state = {
+      today: true,
       city: "",
       lat: null,
       long: null,
       searchfield: "",
       isLoading: true,
+      summary: '',
       currentWeather: {
         icon: 'Shades',
+        summary: '',
         conditions: "",
         temp: null,
         feelslike: null,
@@ -45,9 +50,11 @@ class App extends Component {
     await fetch(`${WeatherData}${API_KEY_TWO}/${LAT},${LONG}`)
       .then(response => response.json())
       .then(data => this.setState({ 
+        summary: data.daily.summary,
         currentWeather: {
           ...this.state.currentWeather, 
           icon: data.currently.icon, 
+          summary: data.currently.summary,
           conditions: data.currently.conditions, 
           temp: data.currently.temperature, 
           feelslike: data.currently.apparentTemperature, 
@@ -56,7 +63,8 @@ class App extends Component {
         isLoading: false}));
   }
 
-  onButtonSubmit = () => {
+
+onButtonSubmit = () => {
     this.requests();
   }
 
@@ -64,21 +72,36 @@ class App extends Component {
     this.setState({ searchfield: event.target.value });
   }
 
+  toggle = () => {
+    this.setState({ today: !this.state.today })
+  }
+
   render() {
-    return (
+    if (this.state.today) {
+        return (
       <Container>
-        <Search searchChange={this.onSearchChange} onButtonSubmit={this.onButtonSubmit}/>
-        <TodayCard 
-          city={this.state.city} 
-          icon={this.state.currentWeather.icon} 
-          conditions={this.state.currentWeather.conditions} 
-          temp={this.state.currentWeather.temp} 
-          feelslike={this.state.currentWeather.feelslike} 
-          hi={this.state.currentWeather.hi} 
-          low={this.state.currentWeather.low}
-          isLoading={this.state.isLoading} />
+        <Search searchChange={this.onSearchChange} onButtonSubmit={this.onButtonSubmit} onKeyPress={this.handleKeyPress} />
+        <Toggle toggle={this.toggle} today={this.state.today} />
+          <TodayCard 
+            city={this.state.city} 
+            summary={this.state.summary}
+            todaySummary={this.state.currentWeather.summary}
+            icon={this.state.currentWeather.icon} 
+            conditions={this.state.currentWeather.conditions} 
+            temp={this.state.currentWeather.temp} 
+            feelslike={this.state.currentWeather.feelslike} 
+            hi={this.state.currentWeather.hi} 
+            low={this.state.currentWeather.low}
+            isLoading={this.state.isLoading} />
       </Container>
-    );
+    )} else {
+      return (
+        <Container>
+          <Search searchChange={this.onSearchChange} onButtonSubmit={this.onButtonSubmit} handleKeyPress={this.handleKeyPress}/>
+          <Toggle toggle={this.toggle} today={this.state.today} />
+          <CardContainer />
+        </Container>
+      )}
   }
 }
 

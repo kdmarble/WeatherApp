@@ -26,6 +26,7 @@ const Wrapper = styled.div`
     }
 `
 
+
 const Search = ({ searchfield, searchChange, onButtonSubmit }) => {
     return(
         <Wrapper>

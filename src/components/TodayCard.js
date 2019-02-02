@@ -13,6 +13,7 @@ const Card = styled.div`
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    margin-top: 50px;
 `
 
 const WeatherIcon = styled.img`
@@ -23,10 +24,13 @@ const WeatherIcon = styled.img`
 const Temp = styled.h2`
     text-align: center;
     margin: 5px 0;
+    font-weight: normal;
 `
 
 const Header = styled.h1`
     text-align: center;
+    width: 50%;
+    font-weight: 400;
 `
 const Wrapper = styled.div`
     display: flex;
@@ -36,7 +40,7 @@ const Wrapper = styled.div`
     margin-top: 50px;
 `
 
-const TodayCard = ({ city, icon, conditions, temp, feelslike, hi, low, isLoading }) => {
+const TodayCard = ({ city, icon, conditions, temp, feelslike, hi, low, isLoading, summary, todaySummary }) => {
     if (isLoading) {
         return(
         <Wrapper>
@@ -50,8 +54,10 @@ const TodayCard = ({ city, icon, conditions, temp, feelslike, hi, low, isLoading
             return(
         <Wrapper>
             <Header>Current Weather for {city === '' ? '...' : city}</Header>
+            <Header>{summary}</Header>
             <Card>
                 <WeatherIcon src={require(`../img/SVG/${icon}.svg`)}></WeatherIcon>
+                <Temp>{todaySummary}</Temp>
                 <Temp>{conditions}</Temp>
                 <Temp>{Math.round(temp)}º</Temp>
                 <Temp>Feels like {Math.round(feelslike)}º</Temp>
